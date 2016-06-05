@@ -1,0 +1,59 @@
+﻿<div class="row" ng-if="vm.isCreatingAttendee">
+    <div class="col-xs-12 text-center">
+        <img src="/Content/img/loading.gif">
+        <h3>Spremam...</h3>
+    </div>
+</div>
+<div class="row" ng-if="!vm.isCreatingAttendee">
+    <form name="createAttendeeForm" ng-submit="vm.actions.createAttendee()" novalidate>
+        <div class="form-group" ng-class="{ 'has-success': createAttendeeForm.firstName.$valid, 'has-error': createAttendeeForm.firstName.$touched && createAttendeeForm.firstName.$error.required }">
+            <label class="control-label">Ime:</label>
+            <input name="firstName" ng-model="vm.newAttendee.FirstName" type="text" class="form-control" required>
+            <span class="help-block" ng-if="createAttendeeForm.firstName.$touched && createAttendeeForm.firstName.$error.required">Ime je obavezno.</span>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-success': createAttendeeForm.lastName.$valid, 'has-error': createAttendeeForm.lastName.$touched && createAttendeeForm.lastName.$error.required }">
+            <label class="control-label">Prezime:</label>
+            <input name="lastName" ng-model="vm.newAttendee.LastName" type="text" class="form-control" required>
+            <span class="help-block" ng-if="createAttendeeForm.lastName.$touched && createAttendeeForm.lastName.$error.required">Prezime je obavezno.</span>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-success': createAttendeeForm.birthdate.$valid, 'has-error': createAttendeeForm.birthdate.$touched && (createAttendeeForm.birthdate.$error.required || createAttendeeForm.birthdate.$error.pattern) }">
+            <label class="control-label">Datum rođenja:</label>
+            <input name="birthdate" ng-model="vm.newAttendee.Birthdate" type="text" class="form-control" required ng-pattern='/^(0?[1-9]|[12][0-9]|3[01])[./-](0?[1-9]|1[012])[./-]\d{4}[.]?$/'>
+            <span class="help-block" ng-if="createAttendeeForm.birthdate.$touched && createAttendeeForm.birthdate.$error.required">Datum rođenja je obavezan.</span>
+            <span class="help-block" ng-if="createAttendeeForm.birthdate.$touched && createAttendeeForm.birthdate.$error.pattern">Neispravan format.</span>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Radni status:</label>
+            <div class="radio" ng-repeat="workingStatus in vm.workingStatuses">
+                <label>
+                    <input name="workStatus" type="radio" ng-model="vm.newAttendee.WorkStatus" ng-value="workingStatus.id" required> {{ workingStatus.label }}
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Institucija:</label>
+            <input ng-model="vm.newAttendee.Institution" type="text" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Odmah isprintati akreditaciju?</label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.newAttendee.ShouldAccreditationBePrinted"/> Da
+                </label>
+            </div>
+        </div>
+
+        <hr>
+        <button type="submit" class="btn btn-success" ng-disabled="!createAttendeeForm.$valid">
+            <span class="glyphicon glyphicon-ok"></span> Spremi
+        </button>
+        <button type="reset" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove"></span> Odustani
+        </button>
+    </form>     
+</div>
