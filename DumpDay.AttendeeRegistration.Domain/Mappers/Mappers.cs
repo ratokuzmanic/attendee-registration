@@ -32,6 +32,5 @@ namespace DumpDay.AttendeeRegistration.Domain.Mappers
                 );
             }
         }
-        
     }
 }
