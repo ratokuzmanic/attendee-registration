@@ -1,0 +1,91 @@
+﻿<div ng-if="!vm.isLoading">
+    <div class="row">
+        <h3>Registracije</h3>
+        <hr>
+        <div class="col-lg-4">
+            <p>Omjer registracija napravljenih online prije konferencije i onih napravljenih na konferenciji</p>
+            <canvas class="chart chart-pie"
+                    chart-data="vm.numberOfRegistrations.data"
+                    chart-labels="vm.numberOfRegistrations.labels"></canvas>
+        </div>
+        <div class="col-lg-8">
+            <p>Distribucija sati registracije na konferenciji</p>
+            <canvas class="chart chart-bar"
+                    chart-data="vm.distributionOfOnsiteRegistrationsByHour.data"
+                    chart-labels="vm.distributionOfOnsiteRegistrationsByHour.labels"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Dolaznost</h3>
+        <hr>
+        <div class="col-lg-8">
+            <p>Pregled broja registracija i posjetitelja s obzirom jesu li se prijavili online ili na konferenciji</p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Lokacija prijave</th>
+                        <th>Registracije</th>
+                        <th>Prisutnost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Online</td>
+                        <td>{{ vm.unpairedNumberOfRegistrations.online }}</td>
+                        <td>{{ vm.unpairedNumberOfApperances.online }}</td>
+                    </tr>
+                    <tr>
+                        <td>Na konferenciji</td>
+                        <td>{{ vm.unpairedNumberOfRegistrations.onsite }}</td>
+                        <td>{{ vm.unpairedNumberOfApperances.onsite }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ukupno</strong></td>
+                        <td><strong>{{ vm.unpairedNumberOfRegistrations.online + vm.unpairedNumberOfRegistrations.onsite }}</strong></td>
+                        <td><strong>{{ vm.unpairedNumberOfApperances.online + vm.unpairedNumberOfApperances.onsite       }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-2">
+            <p>Omjer posjetitelja koji su prisutni s obzirom jesu li se prijavili online ili na konferenciji</p>
+            <canvas class="chart chart-pie"
+                    chart-data="vm.numberOfApperances.data"
+                    chart-labels="vm.numberOfApperances.labels"></canvas>
+        </div>
+        <div class="col-lg-2">
+            <p>Omjer posjetitelja koji su se prijavili online s obzirom jesu li preuzeli akreditaciju ili nisu</p>
+            <canvas class="chart chart-pie"
+                    chart-data="vm.numberOfOnlineRegistrationAccreditationClaims.data"
+                    chart-labels="vm.numberOfOnlineRegistrationAccreditationClaims.labels"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Demografija</h3>
+        <hr>
+        <div class="col-lg-4">
+            <p>Omjer dobnih skupina posjetitelja</p>
+            <canvas class="chart chart-pie"
+                    chart-data="vm.numberOfMembersPerAgeGroup.data"
+                    chart-labels="vm.numberOfMembersPerAgeGroup.labels"></canvas>
+            <p>
+                Dobne skupine:
+                <ul>
+                    <li>Todler: 0-5 godina</li>
+                    <li>Child: 6-12 godina</li>
+                    <li>Teenager: 13-19 godina</li>
+                    <li>YoungAdult: 20-29 godina</li>
+                    <li>Adult: 30-44 godina</li>
+                    <li>OldAdult: 45-59 godina</li>
+                    <li>Senior: 60+ godina</li>
+                </ul>
+            </p>
+        </div>
+        <div class="col-lg-8">
+            <p>Distribucija radnih skupina posjetitelja</p>
+            <canvas class="chart chart-bar"
+                    chart-data="vm.numberOfMembersPerWorkStatus.data"
+                    chart-labels="vm.numberOfMembersPerWorkStatus.labels"></canvas>
+        </div>
+    </div>
+</div>

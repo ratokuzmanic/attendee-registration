@@ -1,0 +1,36 @@
+﻿<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <img src="/Content/img/logo.png" />
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-warning" ng-if="vm.isSettingPassword">
+                Prijava je u tijeku.
+            </div>
+            <form name="setupForm" ng-submit="vm.actions.setupPassword()" novalidate>
+                <div class="form-group">
+                    <label class="control-label">Korisničko ime:</label>
+                    <input name="username" ng-model="vm.user.Username" type="text" class="form-control" disabled>
+                </div>
+
+                <div class="form-group" ng-class="{ 'has-error': setupForm.password.$touched && (setupForm.password.$error.required || setupForm.password.$error.minlength) }">
+                    <label class="control-label">Lozinka:</label>
+                    <input name="password" ng-model="vm.user.Password" type="password" class="form-control" ng-minlength="12" required>
+                    <span class="help-block" ng-if="setupForm.password.$touched && setupForm.password.$error.required">Lozinka je obavezna.</span>
+                    <span class="help-block" ng-if="setupForm.password.$touched && setupForm.password.$error.minlength">Lozinka mora imati barem 12 znakova.</span>
+                </div>
+
+                <div class="form-group" ng-class="{ 'has-error': (setupForm.repeatedPassword.$touched && (vm.user.RepeatedPassword !== vm.user.Password)) }">
+                    <label class="control-label">Ponovljena lozinka:</label>
+                    <input name="repeatedPassword" ng-model="vm.user.RepeatedPassword" type="password" class="form-control" ng-minlength="12" required>
+                    <span class="help-block" ng-if="setupForm.repeatedPassword.$touched && (vm.user.RepeatedPassword !== vm.user.Password)">Ponovoljena lozinka ne odgovara lozinci. Ne želiš da ti spremimo krivu lozinku, zar ne? :)</span>
+                </div>
+
+                <hr>
+                <button type="submit" class="btn btn-default" ng-disabled="!(setupForm.$valid && (vm.user.RepeatedPassword === vm.user.Password))">
+                    Postavi lozinku
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

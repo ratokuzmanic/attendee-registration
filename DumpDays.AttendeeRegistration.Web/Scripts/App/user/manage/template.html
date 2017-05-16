@@ -1,0 +1,65 @@
+﻿<div class="row" ng-if="!vm.isLoading">
+    <div class="row">
+        <div class="col-lg-6">
+            <form name="createUserForm" ng-submit="vm.actions.createUser()" novalidate>
+                <div class="form-group" ng-class="{ 'has-success': createUserForm.username.$valid, 'has-error': createUserForm.username.$touched && createUserForm.username.$error.required }">
+                    <label class="control-label">Korisničko ime:</label>
+                    <input name="username" ng-model="vm.newUser.Username" type="text" class="form-control" required>
+                    <span class="help-block" ng-if="createUserForm.username.$touched && createUserForm.username.$error.required">Korisničko ime je obavezno.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Uloga:</label>
+                    <div class="radio" ng-repeat="role in vm.roles">
+                        <label>
+                            <input name="role" type="radio" ng-model="vm.newUser.Role" ng-value="role.id" required> {{ role.label }}
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success" ng-disabled="!createUserForm.$valid">
+                    <span class="glyphicon glyphicon-ok"></span> Kreiraj
+                </button>
+                <button type="reset" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-remove"></span> Odustani
+                </button>
+            </form> 
+        </div>
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </span>
+                <input type="text" class="form-control" ng-model="searchQuery" placeholder="Pretražite listu korisnika...">
+            </div>
+            <br>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Korisničko ime</th>
+                    <th>Uloga</th>
+                    <th>Stanje računa</th>
+                    <th>Je li postavljena lozinka?</th>
+                    <th>Akcija</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="user in vm.users | filter: searchQuery">
+                    <td>{{user.Username}}</td>
+                    <td>{{vm.roles[user.Role].label}}</td>
+                    <td>{{user.IsActive ? 'Aktivan' : 'Neaktivan'}}</td>
+                    <td>{{user.IsSetup ? 'Je' : 'Nije'}}</td>
+                    <td>
+                        <div class="btn-group-vertical">
+                            <a ng-click="vm.actions.copyActivationLinkToClipboard(user.Id)" class="btn btn-primary btn-sm">Kopiraj</a>
+                            <a ng-click="vm.actions.triggerActivity(user.Id)" ng-class="{ 'btn-success': !user.IsActive, 'btn-warning': user.IsActive }" class="btn btn-sm">{{user.IsActive ? 'Deaktiviraj' : 'Aktiviraj'}}</a>
+                            <a ng-click="vm.actions.remove(user.Id)" class="btn btn-danger btn-sm">Izbriši</a>
+                        </div>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
