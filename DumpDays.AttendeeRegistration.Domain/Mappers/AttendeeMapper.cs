@@ -1,14 +1,14 @@
 ﻿using DumpDays.AttendeeRegistration.Domain.Extensions;
-using ent  = DumpDays.AttendeeRegistration.Domain.Entities;
+using DumpDays.AttendeeRegistration.Domain.Entities;
 using data = DumpDays.AttendeeRegistration.Data.Models;
 
 namespace DumpDays.AttendeeRegistration.Domain.Mappers
 {
     public class AttendeeMapper
     {
-        public static ent::Attendee.ShortDetails MapShortDetails(data::Attendee attendee)
+        public static Attendee.ShortDetails MapShortDetails(data::Attendee attendee)
         {
-            return new ent::Attendee.ShortDetails
+            return new Attendee.ShortDetails
             (
                 id:        attendee.Id,
                 firstName: attendee.FirstName,
@@ -17,9 +17,9 @@ namespace DumpDays.AttendeeRegistration.Domain.Mappers
             );
         }
 
-        public static ent::Attendee.LongDetails MapLongDetails(data::Attendee attendee)
+        public static Attendee.LongDetails MapLongDetails(data::Attendee attendee)
         {
-            return new ent::Attendee.LongDetails
+            return new Attendee.LongDetails
             (
                 id:                     attendee.Id,
                 firstName:              attendee.FirstName,
@@ -32,9 +32,9 @@ namespace DumpDays.AttendeeRegistration.Domain.Mappers
             );
         }
 
-        public static ent::Attendee.StatisticsDetails MapStatisticsDetails(data::Attendee attendee)
+        public static Attendee.StatisticsDetails MapStatisticsDetails(data::Attendee attendee)
         {
-            return new ent::Attendee.StatisticsDetails
+            return new Attendee.StatisticsDetails
             (
                 didRegisterOnline:      attendee.CreatedOn.DidRegisterOnline(),
                 isAccreditationPrinted: attendee.IsAccreditationPrinted,

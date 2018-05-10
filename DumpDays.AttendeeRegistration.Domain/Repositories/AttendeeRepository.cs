@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Linq;
+using DumpDays.AttendeeRegistration.Common;
 using DumpDays.AttendeeRegistration.Data.Contexts;
 using DumpDays.AttendeeRegistration.Domain.Entities;
-using FluentAssertions;
+using DumpDays.AttendeeRegistration.Domain.Mappers;
 
 namespace DumpDays.AttendeeRegistration.Domain.Repositories
 {
-    using map = Mappers.AttendeeMapper;
-
     public interface IAttendeeRepository
     {
-        Attendee.ShortDetails                  GetOne_shortDetails(Guid id);
-        IQueryable<Attendee.ShortDetails>      GetAll_shortDetails();
-        IQueryable<Attendee.LongDetails>       GetAll_longDetails();
-        IQueryable<Attendee.StatisticsDetails> GetAll_statisticsDetails();
+        IMaybe<Attendee.ShortDetails>          GetOne(Guid id);
+        IQueryable<Attendee.LongDetails>       GetAll();
+        IQueryable<Attendee.StatisticsDetails> GetAll_statistics();
     }
 
     public class AttendeeRepository : IAttendeeRepository
@@ -25,38 +23,29 @@ namespace DumpDays.AttendeeRegistration.Domain.Repositories
             _attendeeRegistrationContext = attendeeRegistrationContext;
         }
 
-        public Attendee.ShortDetails GetOne_shortDetails(Guid id)
+        public IMaybe<Attendee.ShortDetails> GetOne(Guid id)
         {
             var attendee = _attendeeRegistrationContext.Attendees.Find(id);
-            attendee.Should().NotBeNull();
+            if (attendee == null) return None<Attendee.ShortDetails>.Exists;
 
-            return map.MapShortDetails(attendee);
+            return Some<Attendee.ShortDetails>.Exists(AttendeeMapper.MapShortDetails(attendee));
         }
 
-        public IQueryable<Attendee.ShortDetails> GetAll_shortDetails()
+        public IQueryable<Attendee.LongDetails> GetAll()
         {
             return
                 _attendeeRegistrationContext.Attendees
                 .ToList()
-                .Select(map.MapShortDetails)
+                .Select(AttendeeMapper.MapLongDetails)
                 .AsQueryable();
         }
 
-        public IQueryable<Attendee.LongDetails> GetAll_longDetails()
+        public IQueryable<Attendee.StatisticsDetails> GetAll_statistics()
         {
             return
                 _attendeeRegistrationContext.Attendees
                 .ToList()
-                .Select(map.MapLongDetails)
-                .AsQueryable();
-        }
-
-        public IQueryable<Attendee.StatisticsDetails> GetAll_statisticsDetails()
-        {
-            return
-                _attendeeRegistrationContext.Attendees
-                .ToList()
-                .Select(map.MapStatisticsDetails)
+                .Select(AttendeeMapper.MapStatisticsDetails)
                 .AsQueryable();
         }
     }

@@ -1,7 +1,9 @@
 ﻿using System;
-using DumpDays.AttendeeRegistration.Data.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DumpDays.AttendeeRegistration.Common;
 using DumpDays.AttendeeRegistration.Domain.Extensions;
-using FluentAssertions;
 
 namespace DumpDays.AttendeeRegistration.Domain.Entities
 {
@@ -23,10 +25,6 @@ namespace DumpDays.AttendeeRegistration.Domain.Entities
                 DateTime birthdate
             )
             {
-                id       .Should().NotBeEmpty();
-                firstName.Should().NotBeNullOrEmpty();
-                lastName .Should().NotBeNullOrEmpty();
-
                 Id        = id;
                 FirstName = firstName;
                 LastName  = lastName;
@@ -59,12 +57,6 @@ namespace DumpDays.AttendeeRegistration.Domain.Entities
                 DateTime     createdOn
             )
             {
-                id        .Should().NotBeEmpty();
-                firstName .Should().NotBeNullOrEmpty();
-                lastName  .Should().NotBeNullOrEmpty();
-                email     .Should().NotBeNullOrEmpty();
-                workStatus.Should().NotBeNull();
-
                 Id                     = id;
                 FirstName              = firstName;
                 LastName               = lastName;
@@ -75,6 +67,16 @@ namespace DumpDays.AttendeeRegistration.Domain.Entities
                 IsAccreditationPrinted = isAccreditationPrinted;
                 CreatedOn              = createdOn;
             }
+
+            public string Serialize()
+                => string.Join(";",
+                    FirstName,
+                    LastName,
+                    Email,
+                    Birthdate.ToString("d.M.yyyy.", null),
+                    Enum.GetName(typeof(WorkStatuses), WorkStatus),
+                    IsAccreditationPrinted.ToString(),
+                    CreatedOn.ToString(Constants.DateTimeFormat, null));
         }
 
         public class StatisticsDetails
@@ -94,9 +96,6 @@ namespace DumpDays.AttendeeRegistration.Domain.Entities
                 WorkStatuses workStatus
             )
             {
-                ageGroup  .Should().NotBeNull();
-                workStatus.Should().NotBeNull();
-
                 DidRegisterOnline      = didRegisterOnline;
                 IsAccreditationPrinted = isAccreditationPrinted;
                 HourOfRegistration     = hourOfRegistration;
@@ -104,5 +103,19 @@ namespace DumpDays.AttendeeRegistration.Domain.Entities
                 WorkStatus             = workStatus;
             }
         }
+
+        public static string Serialize(IList<LongDetails> attendees)
+            => attendees.Select(attendee => attendee.Serialize())
+                .Aggregate(
+                    seed: new StringBuilder().AppendLine(string.Join(";", 
+                        "Firstname", 
+                        "Lastname", 
+                        "Email", 
+                        "Birthday", 
+                        "Work status", 
+                        "Is accreditation printed", 
+                        "Created on")),
+                    func: (aggregate, attendee) => aggregate.AppendLine(attendee))
+                .ToString();
     }
 }

@@ -2,18 +2,10 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DumpDays.AttendeeRegistration.Common;
 
 namespace DumpDays.AttendeeRegistration.Data.Models
 {
-    public enum WorkStatuses
-    {
-        Pupil,
-        Student,
-        Employed,
-        Unemployed,
-        Retired
-    }
-
     public class Attendee
     {
         [Key]

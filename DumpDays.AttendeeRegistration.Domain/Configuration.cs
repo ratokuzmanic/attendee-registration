@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Configuration;
-using System.Globalization;
+using DumpDays.AttendeeRegistration.Common;
 
 namespace DumpDays.AttendeeRegistration.Domain
 {
-    public class Configuration
+    public static class Configuration
     {
         public static int AgeOfMajority 
             => ReadFromConfigAsInt("AgeOfMajority");
-
-        public static int MinimumLengthOfPassword 
-            => ReadFromConfigAsInt("MinimumLengthOfPassword");
 
         public static DateTime EventStart
             => ReadFromConfigAsDateTime("EventStart");
@@ -19,6 +16,6 @@ namespace DumpDays.AttendeeRegistration.Domain
             => int.Parse(ConfigurationManager.AppSettings[field]);
 
         private static DateTime ReadFromConfigAsDateTime(string field)
-            => DateTime.ParseExact(ConfigurationManager.AppSettings[field], "d.M.yyyy. HH:mm", CultureInfo.InvariantCulture);
+            => DateTime.ParseExact(ConfigurationManager.AppSettings[field], Constants.DateTimeFormat, null);
     }
 }

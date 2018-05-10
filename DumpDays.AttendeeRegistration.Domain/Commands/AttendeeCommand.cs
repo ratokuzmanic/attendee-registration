@@ -1,18 +1,16 @@
 ﻿using System;
+using DumpDays.AttendeeRegistration.Common;
 using DumpDays.AttendeeRegistration.Data.Contexts;
-using DumpDays.AttendeeRegistration.Data.Models;
-using FluentAssertions;
-using Attendee = DumpDays.AttendeeRegistration.Domain.Entities.Attendee;
+using DumpDays.AttendeeRegistration.Domain.Mappers;
+using DumpDays.AttendeeRegistration.Domain.Entities;
 
 namespace DumpDays.AttendeeRegistration.Domain.Commands
 {
-    using map = Mappers.AttendeeMapper;
-
     public interface IAttendeeCommand
     {
-        Attendee.ShortDetails Execute(AttendeeCommand.Create command);
-        Attendee.ShortDetails Execute(AttendeeCommand.Print  command);
-        void                  Execute(AttendeeCommand.Delete command);
+        Attendee.ShortDetails         Execute(AttendeeCommand.Create command);
+        IMaybe<Attendee.ShortDetails> Execute(AttendeeCommand.Print  command);
+        ActionResult                  Execute(AttendeeCommand.Delete command);
     }
 
     public class AttendeeCommand : IAttendeeCommand
@@ -38,27 +36,28 @@ namespace DumpDays.AttendeeRegistration.Domain.Commands
             _attendeeRegistrationContext.Attendees.Add(attendee);
             _attendeeRegistrationContext.SaveChanges();
 
-            return map.MapShortDetails(attendee);
+            return AttendeeMapper.MapShortDetails(attendee);
         }
 
-        public Attendee.ShortDetails Execute(Print command)
+        public IMaybe<Attendee.ShortDetails> Execute(Print command)
         {
             var attendee = _attendeeRegistrationContext.Attendees.Find(command.Id);
-            attendee.Should().NotBeNull();
+            if (attendee == null) return None<Attendee.ShortDetails>.Exists;
 
             attendee.IsAccreditationPrinted = true;
 
             _attendeeRegistrationContext.SaveChanges();
-            return map.MapShortDetails(attendee);
+            return Some<Attendee.ShortDetails>.Exists(AttendeeMapper.MapShortDetails(attendee));
         }
 
-        public void Execute(Delete command)
+        public ActionResult Execute(Delete command)
         {
             var attendee = _attendeeRegistrationContext.Attendees.Find(command.Id);
-            attendee.Should().NotBeNull();
+            if(attendee == null) return ActionResult.Failure;
 
             _attendeeRegistrationContext.Attendees.Remove(attendee);
             _attendeeRegistrationContext.SaveChanges();
+            return ActionResult.Success;
         }
 
         public class Create
@@ -80,11 +79,6 @@ namespace DumpDays.AttendeeRegistration.Domain.Commands
                 DateTime     createdOn
             )
             {
-                firstName .Should().NotBeNullOrEmpty();
-                lastName  .Should().NotBeNullOrEmpty();
-                email     .Should().NotBeNullOrEmpty();
-                workStatus.Should().NotBeNull();
-
                 FirstName   = firstName;
                 LastName    = lastName;
                 Email       = email;
@@ -103,7 +97,6 @@ namespace DumpDays.AttendeeRegistration.Domain.Commands
                 Guid id
             )
             {
-                id.Should().NotBeEmpty();
                 Id = id;
             }
         }
@@ -117,7 +110,6 @@ namespace DumpDays.AttendeeRegistration.Domain.Commands
                 Guid id
             )
             {
-                id.Should().NotBeEmpty();
                 Id = id;
             }
         }

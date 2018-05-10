@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DumpDays.AttendeeRegistration.Common;
 
 namespace DumpDays.AttendeeRegistration.Domain.Extensions
 {
-    public enum AgeGroups
-    {
-        Todler,
-        Child,
-        Teenager,
-        YoungAdult,
-        Adult,
-        OldAdult,
-        Senior
-    }
-
     public static class DateTimeExtension
     {
-        private static readonly Dictionary<AgeGroups, int> UpperLimitForAgeGroups = new Dictionary<AgeGroups, int>()
+        private static readonly Dictionary<AgeGroups, int> AgeGroupUpperLimit = new Dictionary<AgeGroups, int>()
         {
             { AgeGroups.Todler,     5 },
             { AgeGroups.Child,      12 },
@@ -33,13 +24,8 @@ namespace DumpDays.AttendeeRegistration.Domain.Extensions
             => createdOn < Configuration.EventStart;
 
         public static AgeGroups GetAgeGroup(this DateTime birthdate)
-        {
-            foreach (var upperLimitForAgeGroup in UpperLimitForAgeGroups)
-            {
-                if (DateTime.Now.Date <= birthdate.AddYears(upperLimitForAgeGroup.Value))
-                    return upperLimitForAgeGroup.Key;
-            }
-            return AgeGroups.Senior;
-        }
+            => AgeGroupUpperLimit.Any(_ => DateTime.Now.Date <= birthdate.AddYears(_.Value))
+                ? AgeGroupUpperLimit.First(_ => DateTime.Now.Date <= birthdate.AddYears(_.Value)).Key
+                : AgeGroups.Senior;
     }
 }
