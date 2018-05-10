@@ -1,8 +1,8 @@
 # Attendee registration app
 
 Web application for registering attendees and printing their accreditations. The application was built for and used at:
-* [DUMP Day](http://day.dump.hr) held at Split, Croatia on June 4th, 2016
-* [DUMP Days](http://days.dump.hr) held at Split, Croatia during May 5th and 6th, 2017
+* [DUMP Day](https://day.dump.hr) held at Split, Croatia on June 4th, 2016
+* [DUMP Days](https://2017.days.dump.hr/) held at Split, Croatia during May 5th and 6th, 2017
 
 ![](http://i.imgur.com/Pe4ZDay.jpg)    
 *Accreditation team printing the accreditations using the app at DUMP Day | Photo credit: DUMP*
